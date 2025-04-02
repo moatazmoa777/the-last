@@ -2,9 +2,8 @@ name: Start Aternos Server
 
 on:
   schedule:
-    - cron: '*/30 * * * *'  # تشغيل السيرفر كل 30 دقيقة
-  workflow_dispatch:  # يتيح لك تشغيله يدويًا من GitHub
-
+    - cron: '*/5 * * * *' 
+  workflow_dispatch: 
 jobs:
   start-server:
     runs-on: ubuntu-latest
@@ -13,21 +12,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Log Start Time
-        run: echo "Attempting to start Aternos server at $(date)"
-
       - name: Start Aternos Server
         run: |
-       RESPONSE=$(curl -v -s -o /dev/null -w "%{http_code}" -X POST "https://api.aternos.org/server/start" \
-  -H "Authorization: Bearer ${{ secrets.ATERNOS_API_TOKEN }}")
-
-if [ "$RESPONSE" -ne 200 ]; then
-  echo "Failed to start server, API response code: $RESPONSE"
-  exit 1
-else
-  echo "Server started successfully!"
-fi
-
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -X POST "https://api.aternos.org/server/start" \
+          -H "Authorization: Bearer ${{ secrets.ATERNOS_API_TOKEN }}")
           
           if [ "$RESPONSE" -ne 200 ]; then
             echo "Failed to start server, API response code: $RESPONSE"
