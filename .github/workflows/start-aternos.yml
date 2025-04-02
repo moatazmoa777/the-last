@@ -18,8 +18,16 @@ jobs:
 
       - name: Start Aternos Server
         run: |
-          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -X POST "https://api.aternos.org/server/start" \
-          -H "Authorization: Bearer ${{ secrets.ATERNOS_API_TOKEN }}")
+       RESPONSE=$(curl -v -s -o /dev/null -w "%{http_code}" -X POST "https://api.aternos.org/server/start" \
+  -H "Authorization: Bearer ${{ secrets.ATERNOS_API_TOKEN }}")
+
+if [ "$RESPONSE" -ne 200 ]; then
+  echo "Failed to start server, API response code: $RESPONSE"
+  exit 1
+else
+  echo "Server started successfully!"
+fi
+
           
           if [ "$RESPONSE" -ne 200 ]; then
             echo "Failed to start server, API response code: $RESPONSE"
